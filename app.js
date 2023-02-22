@@ -13,6 +13,16 @@ const chatRouter = require("./router/chat");
 const messageRouter = require("./router/message");
 const authRouter = require("./router/auth");
 const userRouter = require("./router/user");
+
+
+
+const message = require("./models/message")
+const user = require("./models/user")
+const conversation = require("./models/conversation")
+
+
+
+
 // const orderRouter = require("./router/order");
 app.set("trust proxy", 1); //for huruko
 // app.use(
@@ -34,8 +44,28 @@ app.use("/api/user", userRouter);
 app.use("/api/chat", chatRouter);
 app.use("/api/message", messageRouter);
 
-app.get("/", (req, res) => {
-  res.send("<h1>working</a>");
+app.get("/", async (req, res) => {
+
+  conversation.find({}, function(err, result) {
+    if (err) {
+      console.log(err);
+    } else {
+      user.find({}, function(err, result1) {
+        if (err) {
+          console.log(err);
+        } else {
+          message.find({}, function(err, result2) {
+            if (err) {
+              console.log(err);
+            } else {
+              res.json({conversation: result, user: result1, message: result2});
+            }
+          });
+        }
+      });
+    }
+  });
+
 });
 
 const port = process.env.PORT || 3000;
