@@ -92,18 +92,33 @@ const io = require("socket.io")(server, {
 });
 // let io = socket(server);
 let userArr = [];
+console.log("here is our user array");
 const addUser = (userId, socketId) => {
-  if (userArr.some((u) => u.userId === userId)) return;
+  console.log(socketId);
+  if (userArr.some((u, idx) => u.userId === userId)) {
+    userArr.forEach((u, idx) => {
+      // console.log("before");
+      console.log(userArr);
+      if (u.userId === userId) {
+        userArr.splice(idx, 1, { userId, socketId });
+      }
+      console.log("after");
+      console.log(userArr);
+      return;
+    });
+    return;
+  }
 
   userArr.push({ userId, socketId });
-  console.log(userArr);
+  // console.log(userArr);
 };
 const removeUser = (socketId) => {
   userArr = userArr.filter((i) => i !== socketId);
 };
 const getUser = (id) => {
   let a = userArr.find((user) => user.userId === id);
-  console.log(a);
+  // console.log("our guest user >>>");
+  // console.log(a);
   return a;
   // const data = await user.find({ _id: id });
 };
@@ -118,23 +133,37 @@ io.on("connection", function (socket) {
         // socket.emit("connected");
         addUser(userdata.userId, socket.id);
         io.emit("getUsers", userArr);
-        console.log(userArr);
+        // console.log("here is our user array");
+        // console.log(userArr);
       }
-      console.log("running");
+      // console.log("running");
     });
     // socket.emit("getUsers", userArr);
     socket.on("joinChat", (room) => {
       socket.join(room);
       // console.log(`room chat id is ${room}`);
     });
-    socket.on("sendMsg", ({ userId, receiverId, text }) => {
-      // console.log(newMsg);
+
+    socket.on("sendMsg", ({ senderId, receiverId, text }) => {
+      console.log("check what is comming in>>>>>");
+      console.log(senderId, receiverId);
+      console.log("check arr >>>");
+      console.log(userArr);
       const reciver = getUser(receiverId);
-      // console.log(reciver);
-      console.log(reciver.socketId);
-      io.to(reciver.socketId).emit("getMsg", {
-        senderId: userId,
-        text: text,
+      if (reciver) {
+        console.log("receiver data socker >>>>>");
+        console.log(reciver);
+        console.log(reciver.socketId);
+        console.log("we are sending ok ");
+        io.to(reciver.socketId).emit("getMsg", {
+          senderId: senderId,
+          text: text,
+        });
+      }
+      app.use((req, res) => {
+        res.status(200).json({
+          msg: "receiver not online / found",
+        });
       });
     });
     socket.on("disconnect", () => {

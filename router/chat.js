@@ -7,7 +7,7 @@ const consoleError = require("./showError");
 router.post("/", async (req, res) => {
   console.log("\n\nRoute /chat/ :-");
   console.log(`\t>> Request Body >>>>`);
-  console.log(req.body);
+  // console.log(req.body);
 
   const newChat = new Chat({
     members: [req.body.senderId, req.body.receiverId],
@@ -24,9 +24,9 @@ router.post("/", async (req, res) => {
 
 // get user chats
 router.get("/:id", async (req, res) => {
-  console.log("\n\nRoute /chat/:id/ :-");
-  console.log(`\t>> Request Parameters >>>>`);
-  console.log(req.params);
+  // console.log("\n\nRoute /chat/:id/ :-");
+  // console.log(`\t>> Request Parameters >>>>`);
+  // console.log(req.params);
 
   try {
     const chat = await Chat.find({
@@ -41,7 +41,12 @@ router.get("/:id", async (req, res) => {
     res.status(500).json(error.message);
   }
 });
-
+router.get("/chat-by/:id", async (req, res) => {
+  // console.log("running");
+  const data = await Chat.find({ _id: req.params.id });
+  // console.log(data);
+  res.json({ data });
+});
 router.get("/", (req, res) => {
   res.json({ msg: "working chat" });
 });
