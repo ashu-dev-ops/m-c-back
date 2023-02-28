@@ -40,7 +40,7 @@ app.use("/api/chat", chatRouter);
 app.use("/api/message", messageRouter);
 
 app.get("/", (req, res) => {
-  res.send("<h1>working</h1>");
+  res.send("<h1>working pls hang on docs will be added soon 😶</h1>");
 });
 
 const port = process.env.PORT || 3000;
