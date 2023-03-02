@@ -1,0 +1,260 @@
+openapi: 3.0.0
+info:
+  title: AY-TESTING-CHAT
+  contact: {}
+  version: '1.0'
+servers:
+- url: https://mern-chat-back.onrender.com/api
+  variables: {}
+paths:
+  /auth/sign-up:
+    post:
+      tags:
+      - AUTH
+      summary: register-user
+      operationId: register-user
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/register-user-request'
+              - example:
+                  name: ashuto123
+                  email: ashu450@gmail.com
+                  password: '123'
+            example:
+              name: ashuto123
+              email: ashu450@gmail.com
+              password: '123'
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+  /auth/sign-in:
+    post:
+      tags:
+      - AUTH
+      summary: log-in-user
+      operationId: log-in-user
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/log-in-user-request'
+              - example:
+                  email: ashu450@gmail.com
+                  password: '123'
+            example:
+              email: ashu450@gmail.com
+              password: '123'
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+  
+  /chat/{id}:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description: The user ID
+    get:
+      tags:
+      - CHATS
+      summary: get-user-chats
+      operationId: get-user-chats
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /chat:
+    post:
+      tags:
+      - CHATS
+      summary: create-user-chat
+      operationId: create-user-chat
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/create-user-chat-request'
+              - example:
+                  senderId: 63ecbea4b720762024e15e27
+                  receiverId: 63ecbe7eb720762024e15e25
+            example:
+              senderId: 63ecbea4b720762024e15e27
+              receiverId: 63ecbe7eb720762024e15e25
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /message:
+    post:
+      tags:
+      - MESSAGES
+      summary: create-message
+      operationId: create-message
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/create-message-request'
+              - example:
+                  chatId: 63ecbfceb720762024e15e2b
+                  senderId: 63ecbea4b720762024e15e27
+                  text: hi jhon this is neha
+            example:
+              chatId: 63ecbfceb720762024e15e2b
+              senderId: 63ecbea4b720762024e15e27
+              text: hi jhon this is neha
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /message/{ID}:
+    get:
+      tags:
+      - MESSAGES
+      summary: get-messages-of-chat
+      operationId: get-messages-of-chat
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      
+  /user/update-user/{ID}:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description: The user ID
+ 
+    delete:
+      tags:
+      - USER
+      summary: delete user
+      operationId: deleteuser
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+
+    get:
+      tags:
+      - USER
+      summary: get single user
+      operationId: getsingleuser
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+components:
+  schemas:
+    register-user-request:
+      title: register-user-request
+      required:
+      - name
+      - email
+      - password
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+      example:
+        name: ashuto123
+        email: ashu450@gmail.com
+        password: '123'
+    log-in-user-request:
+      title: log-in-user-request
+      required:
+      - email
+      - password
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      example:
+        email: ashu450@gmail.com
+        password: '123'
+    create-message-request:
+      title: create-message-request
+      required:
+      - chatId
+      - senderId
+      - text
+      type: object
+      properties:
+        chatId:
+          type: string
+        senderId:
+          type: string
+        text:
+          type: string
+      example:
+        chatId: 63ecbfceb720762024e15e2b
+        senderId: 63ecbea4b720762024e15e27
+        text: hi jhon this is neha
+    create-user-chat-request:
+      title: create-user-chat-request
+      required:
+      - senderId
+      - receiverId
+      type: object
+      properties:
+        senderId:
+          type: string
+        receiverId:
+          type: string
+      example:
+        senderId: 63ecbea4b720762024e15e27
+        receiverId: 63ecbe7eb720762024e15e25
+tags:
+
+- name: AUTH
+  description: 'authentication routes'
+- name: CHATS
+  description: 'chat routes'
+- name: MESSAGES
+  description: 'message routes'
+- name: USER
+  description: 'user routes'

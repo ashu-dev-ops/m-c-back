@@ -13,7 +13,11 @@ const chatRouter = require("./router/chat");
 const messageRouter = require("./router/message");
 const authRouter = require("./router/auth");
 const userRouter = require("./router/user");
-
+//
+const swaggerUi = require("swagger-ui-express");
+const YAML = require("yamljs");
+const swaggerDocument = YAML.load("./swagger.yaml");
+//
 const message = require("./models/message");
 const user = require("./models/user");
 const conversation = require("./models/conversation");
@@ -33,14 +37,16 @@ app.use(express.json());
 app.use(helmet());
 app.use(cors());
 app.use(xss());
-
+app.use("/api-use", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/chat", chatRouter);
 app.use("/api/message", messageRouter);
 
 app.get("/", (req, res) => {
-  res.send('<h1> pls hang on docs will be added soon 😶</h1> <br> <h2>for git repo <a href="https://github.com/ashu-dev-ops/m-c-back">click here</a>');
+  res.send(
+    res.send("<h1>api docs</h1>< <a href='/api-use'>go to documentation</a>")
+  );
 });
 
 const port = process.env.PORT || 3000;
